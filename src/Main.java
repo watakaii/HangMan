@@ -24,7 +24,8 @@ public class Main {
     private static void startGame() {
         String word;
         int miss_count = 0;
-        List<Character> error_chars = new ArrayList();
+        List<Character> error_chars;
+        error_chars = new ArrayList<>();
         int wordId = getRandomNumber();
         word = WORDS[wordId];
         char[] mask = new char[word.length()];
@@ -50,7 +51,7 @@ public class Main {
 
     static Scanner in = new Scanner(System.in);
 
-    private static String[] WORDS = new String[] {"виселица", "шаловливость", "кормилица", "яркость", "прозорливость"};
+    private static final String[] WORDS = new String[] {"виселица", "шаловливость", "кормилица", "яркость", "прозорливость"};
 
 
     public static void startGameLoop(String word, char[] mask, int miss_count, List<Character> error_chars) {
