@@ -1,11 +1,35 @@
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Scanner;
 
 
 
 public class Main {
     public static void main(String[] args) {
-        createHang();
+        System.out.println("Введите (1) чтобы начать игру, (2) чтобы закрыть приложение");
+        String menuInput = in.next();
+        while (!Objects.equals(menuInput, "1") && !Objects.equals(menuInput, "2")){
+            System.out.println("Введите (1) или (2)");
+            menuInput = in.next();
+        }
+        if(menuInput.equals("1")) {
+            startGame();
+        }
+        if(menuInput.equals("2")) {
+            System.exit(0);
+        }
+    }
+
+    private static void startGame() {
+        String word;
+        int miss_count = 0;
+        int wordId = getRandomNumber();
+        word = WORDS[wordId];
+        char[] mask = new char[word.length()];
+        for (int i = 0; i < word.length(); i++) {
+            mask[i] = '_';
+        }
+        startGameLoop(word,mask, miss_count);
     }
 
     public static ArrayList<Integer> findPositions(String string, char character) {
@@ -26,45 +50,41 @@ public class Main {
 
     private static String[] WORDS = new String[] {"виселица", "шаловливость", "кормилица", "яркость", "прозорливость"};
 
-    public static void createHang() {
-        String word;
-        int miss_count = 0;
-        int wordId = getRandomNumber();
-        word = WORDS[wordId];
-        char[] hang = new char[word.length()];
-        for (int i = 0; i < word.length(); i++) {
-            hang[i] = '_';
-        }
-        startGameLoop(word,hang, miss_count);
+
+    public static void startGameLoop(String word, char[] mask, int miss_count) {
+        playerTurn(word, mask, miss_count);
     }
 
-    public static void startGameLoop(String word, char[] hang, int miss_count) {
-        playerTurn(word, hang, miss_count);
-    }
-
-    public static void playerTurn(String word, char[] hang, int miss_count) {
+    public static void playerTurn(String word, char[] mask, int miss_count) {
         System.out.println(miss_count);
-        System.out.println(hang);
-        char playerChoice = in.next().charAt(0);
-        letterCheck(playerChoice, word, hang, miss_count);
+        System.out.println(mask);
+        String playerInput = in.next();
+        String isNumber = ".*\\d.*";
+        String isUpperCase = "^[А-Я]+$";
+        while (playerInput.length() > 1 || playerInput.matches(isNumber) || playerInput.matches(isUpperCase)) {
+            System.out.println("Введите маленькую букву");
+            playerInput = in.next();
+        }
+        char playerChoice = playerInput.charAt(0);
+        letterCheck(playerChoice, word, mask, miss_count);
     }
 
-    public static void letterCheck(char playerChoice, String word, char[] hang, int miss_count){
+    public static void letterCheck(char playerChoice, String word, char[] mask, int miss_count){
         if(word.contains(String.valueOf(playerChoice))) {
             ArrayList<Integer> result = findPositions(word, playerChoice);
             for (Integer n : result){
-                hang[n] = playerChoice;
+                mask[n] = playerChoice;
             }
         }
         else {
             miss_count += 1;
         }
-        checkGameState(word, hang, miss_count);
+        checkGameState(word, mask, miss_count);
     }
 
-    private static void checkGameState(String word, char[] hang, int missCount) {
+    private static void checkGameState(String word, char[] mask, int missCount) {
         int FATAL_MISS_COUNT = 6;
-        if (!(new String(hang).contains("_"))){
+        if (!(new String(mask).contains("_"))){
             System.out.println("YOU WIN");
             System.exit(0);
         }
@@ -72,7 +92,7 @@ public class Main {
             System.out.println("YOU LOSE");
             System.exit(0);
         }
-        playerTurn(word, hang, missCount);
+        playerTurn(word, mask, missCount);
     }
 
 }
