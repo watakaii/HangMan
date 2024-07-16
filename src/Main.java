@@ -24,8 +24,6 @@ public class Main {
 
     static Scanner in = new Scanner(System.in);
 
-    private static int FATAL_MISS_COUNT = 6;
-
     private static String[] WORDS = new String[] {"виселица", "шаловливость", "кормилица", "яркость", "прозорливость"};
 
     public static void createHang() {
@@ -61,10 +59,11 @@ public class Main {
         else {
             miss_count += 1;
         }
-        checkGameState(playerChoice, word, hang, miss_count);
+        checkGameState(word, hang, miss_count);
     }
 
-    private static void checkGameState(char playerChoice, String word, char[] hang, int missCount) {
+    private static void checkGameState(String word, char[] hang, int missCount) {
+        int FATAL_MISS_COUNT = 6;
         if (!(new String(hang).contains("_"))){
             System.out.println("YOU WIN");
             System.exit(0);
